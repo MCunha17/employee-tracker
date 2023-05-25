@@ -187,16 +187,27 @@ function addNewEmployee() {
             message: 'Enter the name of the manager of the employee.'
             }
         ])
-        .then((answers) => {
-            addEmployee(answers.firstName, answers.lastName, answers.roleId, answers.managerId)
-                .then(() => {
-                    console.log('Employee added successfully!');
-                    displayMainMenu();
-                })
-                .catch((error) => {
-                    console.error('Error adding employee.', error);
-                    displayMainMenu();
-                });
+        .then(async (answers) => {
+            try {
+                // Fetch the role ID based on the role name
+                const roleSql = 'SELECT id FROM role WHERE title = ?';
+                const roleResult = await query(roleSql, [answers.roleName]);
+                const roleId = roleResult[0].id;
+
+                // Insert the employee with the correct role ID
+                await addEmployee(
+                    answers.firstName,
+                    answers.lastName,
+                    roleId,
+                    answers.managerId
+                );
+
+                console.log('Employee added successfully!');
+            } catch (error) {
+                console.error('Error adding employee.', error);
+            } finally {
+                displayMainMenu();
+            }
         });
 }
   
