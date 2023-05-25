@@ -1,27 +1,43 @@
--- Insert seed data for departments
+-- Department data
 INSERT INTO department (department_name) VALUES ('Product');
 INSERT INTO department (department_name) VALUES ('Operations');
 INSERT INTO department (department_name) VALUES ('Sales');
 INSERT INTO department (department_name) VALUES ('Marketing');
+INSERT INTO department (department_name) VALUES ('Project Management');
 
--- Insert seed data for roles
-INSERT INTO role (title, salary, department_id) VALUES ('Product Manager', 90000, 1);
-INSERT INTO role (title, salary, department_id) VALUES ('Chief Product Officer', 150000, 1);
-INSERT INTO role (title, salary, department_id) VALUES ('Director of Operations', 120000, 2);
-INSERT INTO role (title, salary, department_id) VALUES ('Operations Manager', 100000, 2);
-INSERT INTO role (title, salary, department_id) VALUES ('Business Dev Rep', 80000, 3);
-INSERT INTO role (title, salary, department_id) VALUES ('Sales Enablement Manager', 90000, 3);
-INSERT INTO role (title, salary, department_id) VALUES ('Product Marketing Director', 130000, 4);
-INSERT INTO role (title, salary, department_id) VALUES ('VP of Corporate Comms', 110000, 4);
+-- Role data
+INSERT INTO role (title, salary, department_id) VALUES ('Head of Product', 150000, (SELECT id FROM department WHERE department_name = 'Product'));
+INSERT INTO role (title, salary, department_id) VALUES ('Product Manager', 100000, (SELECT id FROM department WHERE department_name = 'Product'));
+INSERT INTO role (title, salary, department_id) VALUES ('UX Designer', 80000, (SELECT id FROM department WHERE department_name = 'Product'));
+INSERT INTO role (title, salary, department_id) VALUES ('Product Analyst', 70000, (SELECT id FROM department WHERE department_name = 'Product'));
+INSERT INTO role (title, salary, department_id) VALUES ('Head of Operations', 120000, (SELECT id FROM department WHERE department_name = 'Operations'));
+INSERT INTO role (title, salary, department_id) VALUES ('Operations Manager', 110000, (SELECT id FROM department WHERE department_name = 'Operations'));
+INSERT INTO role (title, salary, department_id) VALUES ('Supply Chain Manager', 60000, (SELECT id FROM department WHERE department_name = 'Operations'));
+INSERT INTO role (title, salary, department_id) VALUES ('QA Specialist', 50000, (SELECT id FROM department WHERE department_name = 'Operations'));
+INSERT INTO role (title, salary, department_id) VALUES ('Head of Marketing', 130000, (SELECT id FROM department WHERE department_name = 'Marketing'));
+INSERT INTO role (title, salary, department_id) VALUES ('Marketing Manager', 110000, (SELECT id FROM department WHERE department_name = 'Marketing'));
+INSERT INTO role (title, salary, department_id) VALUES ('Marketing Specialist', 70000, (SELECT id FROM department WHERE department_name = 'Marketing'));
+INSERT INTO role (title, salary, department_id) VALUES ('Content Writer', 55000, (SELECT id FROM department WHERE department_name = 'Marketing'));
+INSERT INTO role (title, salary, department_id) VALUES ('Head of PM', 130000, (SELECT id FROM department WHERE department_name = 'Project Management'));
+INSERT INTO role (title, salary, department_id) VALUES ('Project Manager', 100000, (SELECT id FROM department WHERE department_name = 'Project Management'));
+INSERT INTO role (title, salary, department_id) VALUES ('Scrum Master', 90000, (SELECT id FROM department WHERE department_name = 'Project Management'));
+INSERT INTO role (title, salary, department_id) VALUES ('Project Coordinator', 650000, (SELECT id FROM department WHERE department_name = 'Project Management'));
 
--- Insert seed data for employees
-INSERT INTO employee (first_name, last_name, role_id) VALUES ('Gabby', 'Tofig', 1);
-INSERT INTO employee (first_name, last_name, role_id) VALUES ('Marion', 'Meudal', 2);
-INSERT INTO employee (first_name, last_name, role_id) VALUES ('Peter', 'DeLuca', 3);
-INSERT INTO employee (first_name, last_name, role_id) VALUES ('Suzette', 'Wright', 4);
+-- Employee Data
+INSERT INTO employee (first_name, last_name, role_id)
+VALUES ('Thomas', 'Jefferson', (SELECT id FROM role WHERE title = 'Head of Product'));
 
--- Update manager_id after inserting all employees
-UPDATE employee SET manager_id = 4 WHERE first_name = 'Gabby';
-UPDATE employee SET manager_id = 3 WHERE first_name = 'Marion';
-UPDATE employee SET manager_id = 2 WHERE first_name = 'Peter';
-UPDATE employee SET manager_id = 1 WHERE first_name = 'Suzette';
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+SELECT 'Ava', 'Williams', (SELECT id FROM role WHERE title = 'Product Manager'), e1.id
+FROM employee e1
+WHERE e1.first_name = 'Thomas' AND e1.last_name = 'Jefferson';
+
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+SELECT 'Michael', 'Robinson', (SELECT id FROM role WHERE title = 'UX Designer'), e2.id
+FROM employee e2
+WHERE e2.first_name = 'Ava' AND e2.last_name = 'Williams';
+
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+SELECT 'Emily', 'Johnson', (SELECT id FROM role WHERE title = 'Product Analyst'), e3.id
+FROM employee e3
+WHERE e3.first_name = 'Thomas' AND e3.last_name = 'Jefferson';
