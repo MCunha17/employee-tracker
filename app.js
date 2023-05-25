@@ -7,7 +7,7 @@ const {
   addRole,
   addEmployee,
   updateEmployeeRole
-} = require('./db');
+} = require('./database.js');
 
 // Function to display the main menu
 function displayMainMenu() {
