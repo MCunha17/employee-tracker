@@ -50,7 +50,6 @@ async function getAllEmployees() {
   
 
 // Function to add a new department to the database
-// Function to add a new department to the database
 async function addDepartment(name) {
     const sql = 'INSERT INTO department (department_name) VALUES (?)';
     await query(sql, [name]);
@@ -81,5 +80,6 @@ module.exports = {
   addDepartment,
   addRole,
   addEmployee,
-  updateEmployeeRole
+  updateEmployeeRole,
+  query,
 };

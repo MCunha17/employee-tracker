@@ -1,12 +1,15 @@
 const inquirer = require('inquirer');
-const { query,
+const mysql = require('mysql2');
+const util = require('util');
+const {
   getAllDepartments,
   getAllRoles,
   getAllEmployees,
   addDepartment,
   addRole,
   addEmployee,
-  updateEmployeeRole
+  updateEmployeeRole,
+  query
 } = require('./database.js');
 
 // Function to display the main menu
@@ -118,7 +121,6 @@ function addNewDepartment() {
 }
 
 // Function to add a new role
-// Function to add a new role
 function addNewRole() {
     inquirer
         .prompt([
@@ -140,14 +142,17 @@ function addNewRole() {
         ])
         .then(async (answers) => {
             try {
+                const { title, salary, departmentName } = answers;
+
                 // Fetch the department ID based on the department name
                 const departmentSql = 'SELECT id FROM department WHERE department_name = ?';
-                const departmentResult = await query(departmentSql, [answers.departmentName]);
+                const departmentResult = await query(departmentSql, [departmentName]);
                 const departmentId = departmentResult[0].id;
-  
+
                 // Insert the role with the correct department ID
-                await addRole(answers.title, answers.salary, departmentId);
-  
+                const insertRoleSql = 'INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)';
+                await query(insertRoleSql, [title, salary, departmentId]);
+
                 console.log('Role added successfully!');
             } catch (error) {
                 console.error('Error adding role.', error);
@@ -155,8 +160,7 @@ function addNewRole() {
                 displayMainMenu();
             }
         });
-  }
-  
+}
   
 // Function to add a new employee
 function addNewEmployee() {
