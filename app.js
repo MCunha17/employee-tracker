@@ -1,5 +1,5 @@
 const inquirer = require('inquirer');
-const {
+const { query,
   getAllDepartments,
   getAllRoles,
   getAllEmployees,
@@ -118,37 +118,45 @@ function addNewDepartment() {
 }
 
 // Function to add a new role
+// Function to add a new role
 function addNewRole() {
     inquirer
         .prompt([
             {
-            type: 'input',
-            name: 'title',
-            message: 'Enter the name of the role.'
+                type: 'input',
+                name: 'title',
+                message: 'Enter the name of the role:',
             },
             {
-            type: 'input',
-            name: 'salary',
-            message: 'Enter the salary for the role.'
+                type: 'input',
+                name: 'salary',
+                message: 'Enter the salary for the role:',
             },
             {
-            type: 'input',
-            name: 'departmentName',
-            message: 'Enter the name of the department.'
-            }
+                type: 'input',
+                name: 'departmentName',
+                message: 'Enter the name of the department:',
+            },
         ])
-        .then((answers) => {
-            addRole(answers.title, answers.salary, answers.departmentId)
-                .then(() => {
-                    console.log('Role added successfully!');
-                    displayMainMenu();
-                })
-                .catch((error) => {
-                    console.error('Error adding role.', error);
-                    displayMainMenu();
-                });
+        .then(async (answers) => {
+            try {
+                // Fetch the department ID based on the department name
+                const departmentSql = 'SELECT id FROM department WHERE department_name = ?';
+                const departmentResult = await query(departmentSql, [answers.departmentName]);
+                const departmentId = departmentResult[0].id;
+  
+                // Insert the role with the correct department ID
+                await addRole(answers.title, answers.salary, departmentId);
+  
+                console.log('Role added successfully!');
+            } catch (error) {
+                console.error('Error adding role.', error);
+            } finally {
+                displayMainMenu();
+            }
         });
-}
+  }
+  
   
 // Function to add a new employee
 function addNewEmployee() {

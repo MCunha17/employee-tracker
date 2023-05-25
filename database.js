@@ -6,8 +6,8 @@ const pool = mysql.createPool({
     host: 'localhost',
     port: 3306,
     user: 'root',
-    password: 'Abobora!28',
-    database: 'employee_db',
+    password: 'Abobora!17',
+    database: 'employees_db',
 });
 
 // Promisify the pool query method
@@ -32,21 +32,27 @@ async function getAllDepartments() {
 
 // Function to retrieve all roles from the database
 async function getAllRoles() {
-    const sql = 'SELECT role.*, department.name AS department_name FROM role JOIN department ON role.department_id = department.id';
+    const sql = 'SELECT role.*, department.department_name AS department_name FROM role JOIN department ON role.department_id = department.id';
     const roles = await query(sql);
     return roles;
 }
 
 // Function to retrieve all employees from the database
 async function getAllEmployees() {
-    const sql = 'SELECT employee.*, role.title AS role_title, department.name AS department_name, CONCAT(manager.first_name, " ", manager.last_name) AS manager_name FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id LEFT JOIN employee AS manager ON employee.manager_id = manager.id';
+    const sql = `SELECT employee.*, role.title AS role_title, department.department_name AS department_name, CONCAT(manager.first_name, " ", manager.last_name) AS manager_name
+                 FROM employee
+                 JOIN role ON employee.role_id = role.id
+                 JOIN department ON role.department_id = department.id
+                 LEFT JOIN employee AS manager ON employee.manager_id = manager.id`;
     const employees = await query(sql);
     return employees;
 }
+  
 
 // Function to add a new department to the database
+// Function to add a new department to the database
 async function addDepartment(name) {
-    const sql = 'INSERT INTO department (name) VALUES (?)';
+    const sql = 'INSERT INTO department (department_name) VALUES (?)';
     await query(sql, [name]);
 }
 
