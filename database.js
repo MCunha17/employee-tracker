@@ -1,7 +1,7 @@
 const mysql = require('mysql2');
 const util = require('util');
 
-// Connection pool to the database
+// Connection to the database
 const pool = mysql.createPool({
     host: 'localhost',
     port: 3306,
@@ -74,12 +74,12 @@ async function updateEmployeeRole(employeeId, roleId) {
 }
 
 module.exports = {
-  getAllDepartments,
-  getAllRoles,
-  getAllEmployees,
-  addDepartment,
-  addRole,
-  addEmployee,
-  updateEmployeeRole,
-  query,
+    getAllDepartments,
+    getAllRoles,
+    getAllEmployees,
+    addDepartment,
+    addRole,
+    addEmployee,
+    updateEmployeeRole,
+    query,
 };

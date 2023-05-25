@@ -2,14 +2,14 @@ const inquirer = require('inquirer');
 const mysql = require('mysql2');
 const util = require('util');
 const {
-  getAllDepartments,
-  getAllRoles,
-  getAllEmployees,
-  addDepartment,
-  addRole,
-  addEmployee,
-  updateEmployeeRole,
-  query
+    getAllDepartments,
+    getAllRoles,
+    getAllEmployees,
+    addDepartment,
+    addRole,
+    addEmployee,
+    updateEmployeeRole,
+    query
 } = require('./database.js');
 
 // Function to display the main menu
@@ -28,6 +28,7 @@ function displayMainMenu() {
                     'Add a role',
                     'Add an employee',
                     'Update an employee role',
+                    'Exit',
                 ]
             }
         ])
@@ -53,7 +54,14 @@ function displayMainMenu() {
                     break;
                 case 'Update an employee role':
                     updateEmployee();
-                    process.exit(0);
+                    break;
+                case 'Exit':
+                    process.exit();
+                    break;
+                default:
+                    console.log('Please try again');
+                    displayMainMenu();
+                    break;
             }
         });
 }
@@ -154,12 +162,12 @@ function addNewRole() {
                 await query(insertRoleSql, [title, salary, departmentId]);
 
                 console.log('Role added successfully!');
-            } catch (error) {
-                console.error('Error adding role.', error);
-            } finally {
-                displayMainMenu();
-            }
-        });
+                } catch (error) {
+                    console.error('Error adding role.', error);
+                } finally {
+                    displayMainMenu();
+                }
+            });
 }
   
 // Function to add a new employee
@@ -167,24 +175,24 @@ function addNewEmployee() {
     inquirer
         .prompt([
             {
-            type: 'input',
-            name: 'firstName',
-            message: 'Enter the first name of the employee.'
+                type: 'input',
+                name: 'firstName',
+                message: 'Enter the first name of the employee.'
             },
             {
-            type: 'input',
-            name: 'lastName',
-            message: 'Enter the last name of the employee.'
+                type: 'input',
+                name: 'lastName',
+                message: 'Enter the last name of the employee.'
             },
             {
-            type: 'input',
-            name: 'roleName',
-            message: 'Enter the role of the employee.'
+                type: 'input',
+                name: 'roleName',
+                message: 'Enter the role of the employee.'
             },
             {
-            type: 'input',
-            name: 'managerName',
-            message: 'Enter the name of the manager of the employee.'
+                type: 'input',
+                name: 'managerName',
+                message: 'Enter the name of the manager of the employee.'
             }
         ])
         .then(async (answers) => {
@@ -194,12 +202,17 @@ function addNewEmployee() {
                 const roleResult = await query(roleSql, [answers.roleName]);
                 const roleId = roleResult[0].id;
 
-                // Insert the employee with the correct role ID
+                // Fetch the manager ID based on the manager name
+                const managerSql = 'SELECT id FROM employee WHERE CONCAT(first_name, " ", last_name) = ?';
+                const managerResult = await query(managerSql, [answers.managerName]);
+                const managerId = managerResult[0].id;
+
+                // Insert the employee with the correct role ID and manager ID
                 await addEmployee(
                     answers.firstName,
                     answers.lastName,
                     roleId,
-                    answers.managerId
+                    managerId
                 );
 
                 console.log('Employee added successfully!');
@@ -215,44 +228,44 @@ function addNewEmployee() {
 function updateEmployee() {
     Promise.all([getAllEmployees(), getAllRoles()])
         .then(([employees, roles]) => {
-        inquirer
-            .prompt([
-            {
-                type: 'list',
-                name: 'employeeId',
-                message: 'Select the employee you would like to update.',
-                choices: employees.map((employee) => ({
-                name: `${employee.first_name} ${employee.last_name}`,
-                value: employee.id
-            }))
-            },
-            {
-                type: 'list',
-                name: 'roleId',
-                message: 'Select the new role for the employee:',
-                choices: roles.map((role) => ({
-                name: role.title,
-                value: role.id
-            }))
-        }
-    ])
-    .then((answers) => {
-        updateEmployeeRole(answers.employeeId, answers.roleId)
-            .then(() => {
-                console.log('Employee role updated successfully!');
-                displayMainMenu();
-            })
-            .catch((error) => {
-                console.error('Error updating employee role:', error);
-                displayMainMenu();
-            });
-        });
-    })
+            inquirer
+                .prompt([
+                    {
+                        type: 'list',
+                        name: 'employeeId',
+                        message: 'Select the employee you would like to update.',
+                        choices: employees.map((employee) => ({
+                            name: `${employee.first_name} ${employee.last_name}`,
+                            value: employee.id,
+                        })),
+                    },
+                    {
+                        type: 'list',
+                        name: 'roleId',
+                        message: 'Select the new role for the employee:',
+                        choices: roles.map((role) => ({
+                            name: role.title,
+                            value: role.id,
+                        })),
+                    },
+                ])
+                .then((answers) => {
+                    updateEmployeeRole(answers.employeeId, answers.roleId)
+                        .then(() => {
+                            console.log('Employee role updated successfully!');
+                            displayMainMenu();
+                        })
+                        .catch((error) => {
+                            console.error('Error updating employee role:', error);
+                            displayMainMenu();
+                        });
+                });
+        })
         .catch((error) => {
             console.error('Error retrieving employees or roles:', error);
             displayMainMenu();
         });
-}  
+} 
   
-  // Start the application
-  displayMainMenu();
+// Start the application
+displayMainMenu();
