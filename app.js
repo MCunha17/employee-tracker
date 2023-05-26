@@ -30,7 +30,6 @@ function displayMainMenu() {
                     'Add a role',
                     'Add an employee',
                     'Update an employee role',
-                    'View employees by manager',
                     'View employees by department',
                     'Delete an employee',
                     'Get department budget',
@@ -60,9 +59,6 @@ function displayMainMenu() {
                 break;
             case 'Update an employee role':
                 updateRole();
-                break;
-            case 'Update an employee manager':
-                updateManager();
                 break;
             case 'View employees by department':
                 viewByDepartment();
