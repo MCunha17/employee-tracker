@@ -42,7 +42,6 @@ SELECT 'Emily', 'Johnson', (SELECT id FROM role WHERE title = 'Product Analyst')
 FROM employee e3
 WHERE e3.first_name = 'Thomas' AND e3.last_name = 'Jefferson';
 
-
 INSERT INTO employee (first_name, last_name, role_id)
 VALUES ('Emma', 'Smith', (SELECT id FROM role WHERE title = 'Head of Operations'));
 
@@ -61,3 +60,39 @@ SELECT 'Noah', 'Jones', (SELECT id FROM role WHERE title = 'QA Specialist'), e6.
 FROM employee e6
 WHERE e6.first_name = 'Emma' AND e6.last_name = 'Smith';
 
+INSERT INTO employee (first_name, last_name, role_id)
+VALUES ('Lucas', 'Davis', (SELECT id FROM role WHERE title = 'Head of Marketing'));
+
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+SELECT 'Isabella', 'Garcia', (SELECT id FROM role WHERE title = 'Marketing Manager'), e7.id
+FROM employee e7
+WHERE e7.first_name = 'Lucas' AND e7.last_name = 'Davis';
+
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+SELECT 'Ethan', 'Rodriguez', (SELECT id FROM role WHERE title = 'Marketing Specialist'), e8.id
+FROM employee e8
+WHERE e8.first_name = 'Lucas' AND e8.last_name = 'Davis';
+
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+SELECT 'Sophia', 'Wilson', (SELECT id FROM role WHERE title = 'Content Writer'), e9.id
+FROM employee e9
+WHERE e9.first_name = 'Lucas' AND e9.last_name = 'Davis';
+
+
+INSERT INTO employee (first_name, last_name, role_id)
+VALUES ('Mason', 'Martinez', (SELECT id FROM role WHERE title = 'Head of PM'));
+
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+SELECT 'Mia', 'Anderson', (SELECT id FROM role WHERE title = 'Project Manager'), e10.id
+FROM employee e10
+WHERE e10.first_name = 'Mason' AND e10.last_name = 'Martinez';
+
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+SELECT 'Benjamin', 'Taylor', (SELECT id FROM role WHERE title = 'Scrum Master'), e11.id
+FROM employee e11
+WHERE e11.first_name = 'Mason' AND e11.last_name = 'Martinez';
+
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+SELECT 'Charlotte', 'Thomas', (SELECT id FROM role WHERE title = 'Project Coordinator'), e12.id
+FROM employee e12
+WHERE e12.first_name = 'Mason' AND e12.last_name = 'Martinez';
