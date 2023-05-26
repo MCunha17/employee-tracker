@@ -1,17 +1,16 @@
 const inquirer = require('inquirer');
 const {
-    getAllDepartments, //ViewAllDepartments
-    getAllRoles, //ViewAllRoles
-    getAllEmployees, //ViewAllEmployees
-    addDepartment, //addNewDepartment
-    addRole, //addNewRole
-    addEmployee, //addNewEmployee
-    updateEmployeeRole, //updateRole
-    updateEmployeeManager, //updateManager
-    viewEmployeesByManager, //viewByManager*
-    viewEmployeesByDepartment, //viewByDepartment
-    deleteEmployee, //removeEmployee
-    getDepartmentBudget, //viewDepartmentBudget
+    getAllDepartments, 
+    getAllRoles,
+    getAllEmployees,
+    addDepartment,
+    addRole,
+    addEmployee,
+    updateEmployeeRole,
+    updateEmployeeManager,
+    viewEmployeesByDepartment,
+    deleteEmployee,
+    getDepartmentBudget,
     query,
 } = require('./database.js');
 
@@ -64,9 +63,6 @@ function displayMainMenu() {
                 break;
             case 'Update an employee manager':
                 updateManager();
-                break;
-            case 'View employees by manager':
-                viewByManager();
                 break;
             case 'View employees by department':
                 viewByDepartment();
@@ -337,44 +333,6 @@ function updateManager() {
         })
         .catch((error) => {
             console.error('Error retrieving employees or managers:', error);
-            displayMainMenu();
-        });
-}
-
-// Function to view employees by manager
-function viewByManager() {
-    getAllEmployees()
-        .then((employees) => {
-            inquirer
-            .prompt([
-            {
-              type: 'list',
-              name: 'managerId',
-              message: 'Select the manager to view employees:',
-              choices: employees
-                .filter((employee) => employee.manager_id !== null)
-                .map((employee) => ({
-                  name: `${employee.first_name} ${employee.last_name}`,
-                  value: employee.manager_id,
-                })),
-            },
-        ])
-        .then((answers) => {
-            const { managerId } = answers;
-            // Retrieve employees by manager ID from the database
-            viewEmployeesByManager(managerId)
-            .then((employees) => {
-                console.table(employees);
-                displayMainMenu();
-            })
-                .catch((error) => {
-                    console.error('Error retrieving employees by manager:', error);
-                    displayMainMenu();
-                });
-            });
-        })
-        .catch((error) => {
-            console.error('Error retrieving employees:', error);
             displayMainMenu();
         });
 }

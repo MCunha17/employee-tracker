@@ -78,17 +78,6 @@ async function updateEmployeeManager(employeeId, managerId) {
     const sql = 'UPDATE employee SET manager_id = ? WHERE id = ?';
     await query(sql, [managerId, employeeId]);
 }
-  
-// Function to view employees by manager
-async function viewEmployeesByManager(managerId) {
-    const sql = `SELECT employee.*, role.title AS role_title, department.department_name AS department_name
-                 FROM employee
-                 JOIN role ON employee.role_id = role.id
-                 JOIN department ON role.department_id = department.id
-                 WHERE employee.manager_id = ?`;
-    const employees = await query(sql, [managerId]);
-    return employees;
-}
 
 // Function to view employees by department
 async function viewEmployeesByDepartment(departmentId) {
@@ -125,7 +114,6 @@ module.exports = {
     addEmployee,
     updateEmployeeRole,
     updateEmployeeManager,
-    viewEmployeesByManager,
     viewEmployeesByDepartment,
     deleteEmployee,
     getDepartmentBudget,
