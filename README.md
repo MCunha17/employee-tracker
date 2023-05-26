@@ -1,4 +1,4 @@
-# Note Taker Application
+# Employee Tracker Application
 
 ![License](https://img.shields.io/badge/license-MIT%20License-blue.svg)
 
