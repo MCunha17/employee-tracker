@@ -99,19 +99,7 @@ async function viewEmployeesByDepartment(departmentId) {
                 WHERE department.id = ?`;
     const employees = await query(sql, [departmentId]);
     return employees;
-  }
-  
-// Function to delete a department from the database
-async function deleteDepartment(departmentId) {
-    const sql = 'DELETE FROM department WHERE id = ?';
-    await query(sql, [departmentId]);
-}
-  
-// Function to delete a role from the database
-async function deleteRole(roleId) {
-    const sql = 'DELETE FROM role WHERE id = ?';
-    await query(sql, [roleId]);
-}
+ }
   
 // Function to delete an employee from the database
 async function deleteEmployee(employeeId) {
@@ -139,8 +127,6 @@ module.exports = {
     updateEmployeeManager,
     viewEmployeesByManager,
     viewEmployeesByDepartment,
-    deleteDepartment,
-    deleteRole,
     deleteEmployee,
     getDepartmentBudget,
     query,

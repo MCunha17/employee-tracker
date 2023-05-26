@@ -78,7 +78,6 @@ SELECT 'Sophia', 'Wilson', (SELECT id FROM role WHERE title = 'Content Writer'),
 FROM employee e9
 WHERE e9.first_name = 'Lucas' AND e9.last_name = 'Davis';
 
-
 INSERT INTO employee (first_name, last_name, role_id)
 VALUES ('Mason', 'Martinez', (SELECT id FROM role WHERE title = 'Head of PM'));
 

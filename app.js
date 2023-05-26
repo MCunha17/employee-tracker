@@ -8,10 +8,8 @@ const {
     addEmployee, //addNewEmployee
     updateEmployeeRole, //updateRole
     updateEmployeeManager, //updateManager
-    viewEmployeesByManager, //viewByManager
+    viewEmployeesByManager, //viewByManager*
     viewEmployeesByDepartment, //viewByDepartment
-    // deleteDepartment, //removeDepartment
-    deleteRole, //removeRole
     deleteEmployee, //removeEmployee
     getDepartmentBudget, //viewDepartmentBudget
     query,
@@ -35,8 +33,6 @@ function displayMainMenu() {
                     'Update an employee role',
                     'View employees by manager',
                     'View employees by department',
-                    'Delete a department',
-                    'Delete a role',
                     'Delete an employee',
                     'Get department budget',
                     'Exit',
@@ -418,59 +414,6 @@ function viewByDepartment() {
             displayMainMenu();
         });
  }
-
-// Function to delete a role
-function removeRole() {
-    getAllRoles()
-        .then((roles) => {
-            inquirer
-                .prompt([
-                    {
-                        type: 'list',
-                        name: 'roleId',
-                        message: 'Select the role to delete:',
-                        choices: roles.map((role) => ({
-                            name: role.title,
-                            value: role.id,
-                    })),
-                },
-            ])
-                .then((answers) => {
-                    const { roleId } = answers;
-                    // Confirm the role deletion
-                    inquirer
-                    .prompt([
-                        {
-                            type: 'confirm',
-                            name: 'confirmDelete',
-                            message: 'Are you sure you want to delete the selected role? This action cannot be undone.',
-                            default: false,
-                        },
-                    ])
-                    .then((confirmAnswer) => {
-                        if (confirmAnswer.confirmDelete) {
-                            // Delete the role from the database
-                            deleteRole(roleId)
-                    .then(() => {
-                        console.log('Role deleted successfully!');
-                        displayMainMenu();
-                    })
-                    .catch((error) => {
-                        console.error('Error deleting role:', error);
-                        displayMainMenu();
-                    });
-                    } else {
-                        console.log('Role deletion canceled.');
-                        displayMainMenu();
-                    }
-                });
-            });
-        })
-        .catch((error) => {
-            console.error('Error retrieving roles:', error);
-            displayMainMenu();
-        });
-}
   
 // Function to delete an employee
 function removeEmployee() {
